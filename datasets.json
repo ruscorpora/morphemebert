@@ -1,0 +1,11 @@
+{
+    "belarusian": {
+        "corpus_dir": "belarusian"
+    },
+    "morphodict-k": {
+        "corpus_dir": "morphodict"
+    },
+    "czech": {
+        "corpus_dir": "czech"
+    }
+}

@@ -1,0 +1,52 @@
+{
+    "rubert": {
+        "model_type": "bert",
+        "model_name": "ai-forever/ruBert-base",
+        "learning_rate": 4e-5
+    },
+    "ruroberta": {
+        "model_type": "roberta",
+        "model_name": "ai-forever/ruRoberta-large",
+        "learning_rate": 4e-6
+    },
+    "slavic": {
+        "model_type": "bert",
+        "model_name": "DeepPavlov/bert-base-bg-cs-pl-ru-cased",
+        "learning_rate": 4e-6
+    },
+    "mbert": {
+        "model_type": "bert",
+        "model_name": "google-bert/bert-base-multilingual-cased",
+        "learning_rate": 4e-5
+    },
+    "bel_roberta": {
+        "model_type": "auto",
+        "model_name": "KoichiYasuoka/roberta-small-belarusian",
+        "learning_rate": 4e-5
+    },
+    "hplt": {
+        "model_type": "auto",
+        "model_name": "HPLT/hplt_bert_base_2_0_bel-Cyrl",
+        "learning_rate": 4e-6
+    },
+    "hplt_rus": {
+        "model_type": "auto",
+        "model_name": "HPLT/hplt_bert_base_2_0_rus-Cyrl",
+        "learning_rate": 4e-6
+    },
+    "distilbert": {
+        "model_type": "distilbert",
+        "model_name": "distilbert/distilbert-base-multilingual-cased",
+        "learning_rate": 4e-5
+    },
+    "xlmr_base": {
+        "model_type": "xlmroberta",
+        "model_name": "FacebookAI/xlm-roberta-base",
+        "learning_rate": 4e-6
+    },
+    "xlmr_large": {
+        "model_type": "xlmroberta",
+        "model_name": "FacebookAI/xlm-roberta-large",
+        "learning_rate": 4e-6
+    }
+}
