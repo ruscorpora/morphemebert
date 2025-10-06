@@ -24,7 +24,8 @@ Your project should be organized as follows for the script to run correctly:
 ```
 .
 ├── morphbert.py          # The main class file
-├── run_experiment.py     # An example script to run training/prediction
+├── run.py                # An example script to run training/prediction
+├── run_cv.py             # An example script to run cross-validation
 ├── models.json           # Configuration for models
 ├── datasets.json         # Configuration for datasets
 ├── requirements.txt      # Project dependencies
