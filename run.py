@@ -9,7 +9,7 @@ if __name__ == "__main__":
     parser.add_argument("--action", type=str, choices=["train", "predict"], required=True, help="Action to perform.")
     parser.add_argument("--epochs", type=int, default=30, help="Number of training epochs.")
     parser.add_argument("--use_lemma", action="store_true", help="Whether to use the lemma as a special token.")
-    parser.add_argument("--mode", type=str, default="lemma", choices=["form", "lemma", "roots"], help="Split mode for data.")
+    parser.add_argument("--mode", type=str, default="random", choices=["form", "lemma", "roots", "random"], help="Split mode for data.")
 
     args = parser.parse_args()
 

@@ -1,11 +1,14 @@
 {
-    "belarusian": {
-        "corpus_dir": "belarusian"
+    "bel": {
+        "train_file": "data/bel/split-by-{mode}/{str(fold)}/train.txt",
+        "test_file": "data/bel/split-by-{mode}/{str(fold)}/test.txt"
     },
-    "morphodict-k": {
-        "corpus_dir": "morphodict"
+    "ces": {
+        "train_file": "data/ces/split-by-{mode}/{str(fold)}/train.txt",
+        "test_file": "data/ces/split-by-{mode}/{str(fold)}/test.txt"
     },
-    "czech": {
-        "corpus_dir": "czech"
+    "eng": {
+        "train_file": "data/eng/split-by-{mode}/{str(fold)}/train.txt",
+        "test_file": "data/eng/split-by-{mode}/{str(fold)}/test.txt"
     }
 }

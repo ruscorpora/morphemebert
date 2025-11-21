@@ -25,6 +25,7 @@ class SplitMode(Enum):
     SPLIT_BY_FORM = "form"
     SPLIT_BY_LEMMA = "lemma"
     SPLIT_BY_ROOTS = "roots"
+    SPLIT_BY_RANDOM = "random"
 
 
 class MorphBERT:
@@ -44,7 +45,7 @@ class MorphBERT:
         data_dir: str = "data",
         results_dir: str = "results",
         use_lemma: bool = False,
-        mode: SplitMode = SplitMode.SPLIT_BY_LEMMA,
+        mode: SplitMode = SplitMode.SPLIT_BY_RANDOM,
     ):
         """
         Initializes the MorphBERT model with given configurations.
@@ -91,18 +92,52 @@ class MorphBERT:
         self.data_collator = DataCollatorForTokenClassification(
             tokenizer=self.tokenizer
         )
-        self.label_list = self._get_label_list()
-        self.label_to_id = {l: i for i, l in enumerate(self.label_list)}
 
-    def _get_label_list(self):
+        # Labels will be determined dynamically during training or loading
+        self.label_list = None
+        self.label_to_id = None
+
+    def _determine_labels_from_data(self, file_path: Path):
+        """
+        Scans the training file to identify all unique morpheme types and generates the BMES label list.
+        """
+        unique_types = set()
+
+        with open(file_path, "r", encoding="utf-8") as f:
+            for line in f:
+                parts = line.strip().split("\t")
+                if len(parts) < 2:
+                    continue
+                parsing = parts[1]
+
+                # Skip invalid entries
+                if parsing in ["FAILED", "WRONG_LEN"]:
+                    continue
+
+                try:
+                    for m in parsing.split("/"):
+                        if ":" in m:
+                            _, m_type = m.rsplit(":", 1)  # rsplit to handle colons in morphemes if any
+                            unique_types.add(m_type)
+                except ValueError:
+                    continue
+
+        # Sort types to ensure deterministic order
+        sorted_types = sorted(list(unique_types))
+
         custom_labels = []
         if self.use_lemma:
             custom_labels.append("0")
-        for mtype in ["ROOT", "PREF", "SUFF", "END", "POST", "LINK", "HYPN"]:
+
+        # Generate BMES tags for each discovered type
+        for mtype in sorted_types:
             custom_labels.extend(
                 [f"B-{mtype}", f"M-{mtype}", f"E-{mtype}", f"S-{mtype}"]
             )
-        return custom_labels
+
+        self.label_list = custom_labels
+        self.label_to_id = {l: i for i, l in enumerate(self.label_list)}
+        print(f"Detected {len(sorted_types)} unique morpheme types. Total labels: {len(self.label_list)}")
 
     @staticmethod
     def _convert2bmes(parsing: str) -> list:
@@ -110,7 +145,11 @@ class MorphBERT:
             return []
         bmes = []
         for m in parsing.split("/"):
-            m_str, m_type = m.split(":")
+            # Robust split in case morpheme text contains colon (rare but possible)
+            if ":" not in m:
+                continue
+            m_str, m_type = m.rsplit(":", 1)
+
             if len(m_str) == 1:
                 bmes.append(f"S-{m_type}")
             else:
@@ -154,6 +193,10 @@ class MorphBERT:
             tokens = list(lemma_processed)
             bmes = self._convert2bmes(parsing)
 
+            # Skip if conversion failed or empty (e.g., malformed input)
+            if not bmes:
+                continue
+
             if self.use_lemma:
                 tokens = [lemma_processed] + tokens
                 bmes = ["0"] + bmes
@@ -176,7 +219,8 @@ class MorphBERT:
                 if word_idx is None:
                     label_ids.append(-100)
                 elif word_idx != previous_word_idx:
-                    label_ids.append(self.label_to_id[label[word_idx]])
+                    # Safely map label to ID, default to -100 if unknown (though ideally shouldn't happen in train)
+                    label_ids.append(self.label_to_id.get(label[word_idx], -100))
                 else:
                     label_ids.append(-100)
                 previous_word_idx = word_idx
@@ -223,7 +267,7 @@ class MorphBERT:
         SE = [
             "{}-{}".format(x, y)
             for x in "SE"
-            for y in ["ROOT", "PREF", "SUFF", "END", "LINK"]
+            for y in ["ROOT", "PREF", "SUFF", "END", "LINK", "STEM"]
         ]
         TP, FP, FN, equal, total, corr_words = self._f_measure(targets, predicted, SE)
 
@@ -252,15 +296,21 @@ class MorphBERT:
         Args:
             fold (int): The fold number for training.
         """
-        train_file = (
-            self.data_dir
-            / f"{self.config['corpus_dir']}/split-by-{self.mode.value}/{str(fold)}/train.txt"
-        )
+        # Resolve train file path from config using fold and mode placeholders
+        train_file_template = self.config.get("train_file")
+        if not train_file_template:
+            raise ValueError("Configuration must contain 'train_file' key.")
+
+        train_file = self.data_dir / train_file_template.format(fold=fold, mode=self.mode.value)
+
         outputs_dir = self._get_output_path(fold)
         outputs_dir.mkdir(parents=True, exist_ok=True)
 
         print(f"Train file: {train_file}")
         print(f"Outputs dir: {outputs_dir}")
+
+        # Determine labels from the specific training file
+        self._determine_labels_from_data(train_file)
 
         train_dataset = self._load_data_for_hf(train_file)
         tokenized_train_dataset = train_dataset.map(
@@ -286,6 +336,7 @@ class MorphBERT:
             save_total_limit=1,
             logging_steps=100,
             fp16=True,
+            report_to="none",
         )
 
         trainer = Trainer(
@@ -308,10 +359,13 @@ class MorphBERT:
             fold (int): The fold number for prediction.
         """
         models_dir = self._get_output_path(fold)
-        test_file = (
-            self.data_dir
-            / f"{self.config['corpus_dir']}/split-by-{self.mode.value}/{str(fold)}/test.txt"
-        )
+
+        # Resolve test file path from config using fold and mode placeholders
+        test_file_template = self.config.get("test_file")
+        if not test_file_template:
+            raise ValueError("Configuration must contain 'test_file' key.")
+
+        test_file = self.data_dir / test_file_template.format(fold=fold, mode=self.mode.value)
 
         results_dir = (
             self.results_dir
@@ -327,14 +381,20 @@ class MorphBERT:
         print(f"Test file: {test_file}")
         print(f"Predictions will be saved to: {predicted_file}")
 
-        test_dataset = self._load_data_for_hf(test_file)
-        tokenized_test_dataset = test_dataset.map(
-            self._tokenize_and_align_labels, batched=True
-        )
-
+        # Load model
         model = AutoModelForTokenClassification.from_pretrained(
             str(models_dir),
             trust_remote_code=(self.model_config_name == "hplt"),
+        )
+
+        # Restore labels from the loaded model configuration
+        # This ensures we use the exact same labels mapping as during training
+        self.label_to_id = model.config.label2id
+        self.label_list = [model.config.id2label[i] for i in sorted(model.config.id2label.keys())]
+
+        test_dataset = self._load_data_for_hf(test_file)
+        tokenized_test_dataset = test_dataset.map(
+            self._tokenize_and_align_labels, batched=True
         )
 
         trainer = Trainer(

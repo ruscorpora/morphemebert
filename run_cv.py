@@ -8,7 +8,7 @@ if __name__ == "__main__":
     parser.add_argument('--dataset', type=str, required=True, help='Name of the dataset configuration from datasets.json')
     parser.add_argument('--num_folds', type=int, default=5, help='Number of folds for cross-validation')
     parser.add_argument('--epochs', type=int, default=30, help='Number of training epochs for each fold')
-    parser.add_argument('--mode', type=str, default='lemma', help='One of split modes: by form, by lemma, by roots')
+    parser.add_argument("--mode", type=str, default="random", choices=["form", "lemma", "roots", "random"], help="Split mode for data.")
     parser.add_argument('--use_lemma', action='store_true', default=False, help='Add lemma to the features')
     parser.add_argument('--predict_only', action='store_true', default=False, help='Run cross-val without training')
     parser.add_argument('--only_fold', type=int, default=-1, help='If set, only runs fold with specific number')
