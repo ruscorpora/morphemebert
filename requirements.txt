@@ -2,3 +2,4 @@ datasets==4.0.0
 pandas==2.3.2
 tokenizers==0.20.1
 transformers[torch]==4.46.1
+catboost==1.2.8

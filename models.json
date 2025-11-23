@@ -29,11 +29,6 @@
         "model_name": "HPLT/hplt_bert_base_2_0_bel-Cyrl",
         "learning_rate": 4e-6
     },
-    "hplt_rus": {
-        "model_type": "auto",
-        "model_name": "HPLT/hplt_bert_base_2_0_rus-Cyrl",
-        "learning_rate": 4e-6
-    },
     "distilbert": {
         "model_type": "distilbert",
         "model_name": "distilbert/distilbert-base-multilingual-cased",
@@ -48,5 +43,44 @@
         "model_type": "xlmroberta",
         "model_name": "FacebookAI/xlm-roberta-large",
         "learning_rate": 4e-6
+    },
+    "resnet": {
+        "model_type": "resnet",
+        "model_name": "resnet_10layers",
+        "hidden_dim": 256,
+        "num_layers": 10,
+        "dropout": 0.1,
+        "learning_rate": 0.001,
+        "batch_size": 64
+    },
+    "catboost": {
+        "model_type": "catboost",
+        "model_name": "catboost_cbm",
+        "iterations": 1000,
+        "depth": 6,
+        "learning_rate": 0.1,
+        "window_size": 3,
+        "task_type": "GPU"
+    },
+    "bilstm": {
+        "model_type": "bilstm",
+        "model_name": "bilstm_2layers",
+        "embedding_dim": 128,
+        "hidden_dim": 256,
+        "num_layers": 2,
+        "dropout": 0.2,
+        "learning_rate": 0.001,
+        "batch_size": 64
+    },
+    "transformer": {
+        "model_type": "transformer",
+        "model_name": "transformer_base",
+        "hidden_dim": 256,
+        "nhead": 4,
+        "num_layers": 4,
+        "dim_feedforward": 512,
+        "dropout": 0.1,
+        "learning_rate": 0.001,
+        "batch_size": 64
     }
 }

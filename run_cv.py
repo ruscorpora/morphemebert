@@ -1,6 +1,12 @@
 import argparse
 import time
-from morphbert import MorphBERT, SplitMode
+from morph_base import SplitMode
+from morphbert import MorphBERT
+from morphresnet import MorphResNet
+from morphcatboost import MorphCatBoost
+from morphlstm import MorphBiLSTM
+from morphformer import MorphTransformer
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run N-fold cross-validation for MorphBERT.")
@@ -25,23 +31,40 @@ if __name__ == "__main__":
         print(f" FOLD {fold} of {args.num_folds}")
         print("=" * 50)
 
-        # Initialize the model for the current fold
-        morph_bert_model = MorphBERT(
+        if "resnet" in args.model:
+            print(f"Initializing MorphResNet (1D CNN) for config: {args.model}")
+            ModelClass = MorphResNet
+        elif "catboost" in args.model:
+             print(f"Initializing MorphCatBoost for config: {args.model}")
+             ModelClass = MorphCatBoost
+        elif "lstm" in args.model:
+             print(f"Initializing MorphBiLSTM for config: {args.model}")
+             ModelClass = MorphBiLSTM
+        elif "transformer" in args.model:
+            print(f"Initializing MorphTransformer for config: {args.model}")
+            ModelClass = MorphTransformer
+        else:
+            print(f"Initializing MorphBERT (Transformer) for config: {args.model}")
+            ModelClass = MorphBERT
+
+        # Инициализируем выбранную модель
+        # Интерфейсы классов идентичны, поэтому аргументы подходят для обоих
+        morph_model = ModelClass(
             model_config_name=args.model,
             dataset_config_name=args.dataset,
             num_epochs=args.epochs,
             mode=SplitMode(args.mode),
-            use_lemma=args.use_lemma
+            use_lemma=args.use_lemma,
         )
 
         if not args.predict_only:
             # Train the model
             print(f"\n--- Training Fold {fold} ---")
-            morph_bert_model.train(fold=fold)
+            morph_model.train(fold=fold)
 
         # Run prediction
         print(f"\n--- Predicting Fold {fold} ---")
-        morph_bert_model.predict(fold=fold)
+        morph_model.predict(fold=fold)
 
         fold_end_time = time.time()
         print(f"\nFold {fold} completed in {time.strftime('%H:%M:%S', time.gmtime(fold_end_time - fold_start_time))}.")

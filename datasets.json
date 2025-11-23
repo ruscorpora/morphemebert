@@ -8,7 +8,71 @@
         "test_file": "data/ces/split-by-{mode}/{str(fold)}/test.txt"
     },
     "eng": {
-        "train_file": "data/eng/split-by-{mode}/{str(fold)}/train.txt",
-        "test_file": "data/eng/split-by-{mode}/{str(fold)}/test.txt"
+        "train_file": "/home/morozov/acl/morpheme-segmentation/data/eng/split-by-{mode}/{fold}/train.txt",
+        "test_file": "/home/morozov/acl/morpheme-segmentation/data/eng/split-by-{mode}/{fold}/test.txt"
+    },
+    "fra": {
+        "train_file": "/home/morozov/acl/morpheme-segmentation/data/fra/split-by-{mode}/{fold}/train.txt",
+        "test_file": "/home/morozov/acl/morpheme-segmentation/data/fra/split-by-{mode}/{fold}/test.txt"
+    },
+    "ita": {
+        "train_file": "/home/morozov/acl/morpheme-segmentation/data/ita/split-by-{mode}/{fold}/train.txt",
+        "test_file": "/home/morozov/acl/morpheme-segmentation/data/ita/split-by-{mode}/{fold}/test.txt"
+    },
+    "swe": {
+        "train_file": "/home/morozov/acl/morpheme-segmentation/data/swe/split-by-{mode}/{fold}/train.txt",
+        "test_file": "/home/morozov/acl/morpheme-segmentation/data/swe/split-by-{mode}/{fold}/test.txt"
+    },
+    "hrv": {
+        "train_file": "/home/morozov/acl/morpheme-segmentation/data/hrv/split-by-{mode}/{fold}/train.txt",
+        "test_file": "/home/morozov/acl/morpheme-segmentation/data/hrv/split-by-{mode}/{fold}/test.txt"
+    },
+    "hin": {
+        "train_file": "/home/morozov/acl/morpheme-segmentation/data/hin/split-by-{mode}/{fold}/train.txt",
+        "test_file": "/home/morozov/acl/morpheme-segmentation/data/hin/split-by-{mode}/{fold}/test.txt"
+    },
+    "kan": {
+        "train_file": "/home/morozov/acl/morpheme-segmentation/data/kan/split-by-{mode}/{fold}/train.txt",
+        "test_file": "/home/morozov/acl/morpheme-segmentation/data/kan/split-by-{mode}/{fold}/test.txt"
+    },
+    "mal": {
+        "train_file": "/home/morozov/acl/morpheme-segmentation/data/mal/split-by-{mode}/{fold}/train.txt",
+        "test_file": "/home/morozov/acl/morpheme-segmentation/data/mal/split-by-{mode}/{fold}/test.txt"
+    },
+    "mar": {
+        "train_file": "/home/morozov/acl/morpheme-segmentation/data/mar/split-by-{mode}/{fold}/train.txt",
+        "test_file": "/home/morozov/acl/morpheme-segmentation/data/mar/split-by-{mode}/{fold}/test.txt"
+    },
+    "fas": {
+        "train_file": "/home/morozov/acl/morpheme-segmentation/data/fas/split-by-{mode}/{fold}/train.txt",
+        "test_file": "/home/morozov/acl/morpheme-segmentation/data/fas/split-by-{mode}/{fold}/test.txt"
+    },
+    "udm": {
+        "train_file": "/home/morozov/acl/morpheme-segmentation/data/udm/split-by-{mode}/{fold}/train.txt",
+        "test_file": "/home/morozov/acl/morpheme-segmentation/data/udm/split-by-{mode}/{fold}/test.txt"
+    },
+    "tgk": {
+        "train_file": "/home/morozov/acl/morpheme-segmentation/data/tgk/split-by-{mode}/{fold}/train.txt",
+        "test_file": "/home/morozov/acl/morpheme-segmentation/data/tgk/split-by-{mode}/{fold}/test.txt"
+    },
+    "hye": {
+        "train_file": "/home/morozov/acl/morpheme-segmentation/data/hye/split-by-{mode}/{fold}/train.txt",
+        "test_file": "/home/morozov/acl/morpheme-segmentation/data/hye/split-by-{mode}/{fold}/test.txt"
+    },
+    "nbl": {
+        "train_file": "/home/morozov/acl/morpheme-segmentation/data/nbl/split-by-{mode}/{fold}/train.txt",
+        "test_file": "/home/morozov/acl/morpheme-segmentation/data/nbl/split-by-{mode}/{fold}/test.txt"
+    },
+    "xho": {
+        "train_file": "/home/morozov/acl/morpheme-segmentation/data/xho/split-by-{mode}/{fold}/train.txt",
+        "test_file": "/home/morozov/acl/morpheme-segmentation/data/xho/split-by-{mode}/{fold}/test.txt"
+    },
+    "zul": {
+        "train_file": "/home/morozov/acl/morpheme-segmentation/data/zul/split-by-{mode}/{fold}/train.txt",
+        "test_file": "/home/morozov/acl/morpheme-segmentation/data/zul/split-by-{mode}/{fold}/test.txt"
+    },
+    "ssw": {
+        "train_file": "/home/morozov/acl/morpheme-segmentation/data/ssw/split-by-{mode}/{fold}/train.txt",
+        "test_file": "/home/morozov/acl/morpheme-segmentation/data/ssw/split-by-{mode}/{fold}/test.txt"
     }
 }
